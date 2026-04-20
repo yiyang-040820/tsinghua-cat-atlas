@@ -28,12 +28,12 @@ export function AddRelationshipDialog({
     if (!otherId) return toast.error("请选择另一只猫");
     setSubmitting(true);
     try {
-      const { error } = await supabase.from("cat_relationships").insert({
+      const { error } = await supabase.from("cat_relationships").insert([{
         cat_a_id: catId,
         cat_b_id: otherId,
         relation_type: type,
         description: desc.trim() || null,
-      });
+      }]);
       if (error) throw error;
       toast.success("关系已记录 💞");
       setOtherId("");
