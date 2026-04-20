@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as CatsRouteImport } from './routes/cats'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CatsCatIdRouteImport } from './routes/cats.$catId'
 
 const CatsRoute = CatsRouteImport.update({
   id: '/cats',
@@ -22,31 +23,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CatsCatIdRoute = CatsCatIdRouteImport.update({
+  id: '/$catId',
+  path: '/$catId',
+  getParentRoute: () => CatsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/cats': typeof CatsRoute
+  '/cats': typeof CatsRouteWithChildren
+  '/cats/$catId': typeof CatsCatIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/cats': typeof CatsRoute
+  '/cats': typeof CatsRouteWithChildren
+  '/cats/$catId': typeof CatsCatIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/cats': typeof CatsRoute
+  '/cats': typeof CatsRouteWithChildren
+  '/cats/$catId': typeof CatsCatIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cats'
+  fullPaths: '/' | '/cats' | '/cats/$catId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cats'
-  id: '__root__' | '/' | '/cats'
+  to: '/' | '/cats' | '/cats/$catId'
+  id: '__root__' | '/' | '/cats' | '/cats/$catId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CatsRoute: typeof CatsRoute
+  CatsRoute: typeof CatsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +74,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cats/$catId': {
+      id: '/cats/$catId'
+      path: '/$catId'
+      fullPath: '/cats/$catId'
+      preLoaderRoute: typeof CatsCatIdRouteImport
+      parentRoute: typeof CatsRoute
+    }
   }
 }
 
+interface CatsRouteChildren {
+  CatsCatIdRoute: typeof CatsCatIdRoute
+}
+
+const CatsRouteChildren: CatsRouteChildren = {
+  CatsCatIdRoute: CatsCatIdRoute,
+}
+
+const CatsRouteWithChildren = CatsRoute._addFileChildren(CatsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CatsRoute: CatsRoute,
+  CatsRoute: CatsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
