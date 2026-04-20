@@ -2,8 +2,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useCats } from "@/hooks/use-cats";
+import type { Database } from "@/integrations/supabase/types";
 import { Modal, FormField, inputCls, SubmitButton } from "./_shared";
 import { RELATION_LABELS } from "@/lib/cat-constants";
+
+type RelType = Database["public"]["Enums"]["cat_relation_type"];
 
 export function AddRelationshipDialog({
   open,
@@ -19,7 +22,7 @@ export function AddRelationshipDialog({
   const { cats } = useCats();
   const others = cats.filter((c) => c.id !== catId);
   const [otherId, setOtherId] = useState("");
-  const [type, setType] = useState<keyof typeof RELATION_LABELS>("friend");
+  const [type, setType] = useState<RelType>("friend");
   const [desc, setDesc] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -59,7 +62,7 @@ export function AddRelationshipDialog({
           </select>
         </FormField>
         <FormField label="关系类型" required>
-          <select value={type} onChange={(e) => setType(e.target.value as any)} className={inputCls}>
+          <select value={type} onChange={(e) => setType(e.target.value as RelType)} className={inputCls}>
             {Object.entries(RELATION_LABELS).map(([k, v]) => (
               <option key={k} value={k}>{v.label}</option>
             ))}
