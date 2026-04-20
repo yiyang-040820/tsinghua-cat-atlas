@@ -1,6 +1,4 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
-import { Toaster } from "sonner";
-import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 
 import appCss from "../styles.css?url";
 
@@ -31,19 +29,24 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "清华猫咪图鉴 · THU Cat Atlas" },
-      { name: "description", content: "记录清华园里每一只可爱的猫咪——基本信息、照片、出没地图与社交关系。由清华大学小动物保护协会维护。" },
-      { name: "author", content: "清华大学小动物保护协会" },
-      { property: "og:title", content: "清华猫咪图鉴 · THU Cat Atlas" },
-      { property: "og:description", content: "记录清华园里每一只可爱的猫咪——基本信息、照片、出没地图与社交关系。" },
+      { title: "thusasap-cat-atlas" },
+      { name: "description", content: "Tsinghua Cat Atlas is a web application for documenting and visualizing Tsinghua University's feline population." },
+      { name: "author", content: "Lovable" },
+      { property: "og:title", content: "thusasap-cat-atlas" },
+      { property: "og:description", content: "Tsinghua Cat Atlas is a web application for documenting and visualizing Tsinghua University's feline population." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "thusasap-cat-atlas" },
+      { name: "twitter:description", content: "Tsinghua Cat Atlas is a web application for documenting and visualizing Tsinghua University's feline population." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/df113f7f-ec47-4deb-b166-dc83d0a1d15d/id-preview-e1c890e8--58360d12-bbf7-4f11-afed-d19c07ab4b95.lovable.app-1776657723650.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/df113f7f-ec47-4deb-b166-dc83d0a1d15d/id-preview-e1c890e8--58360d12-bbf7-4f11-afed-d19c07ab4b95.lovable.app-1776657723650.png" },
     ],
     links: [
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&display=swap" },
-      { rel: "stylesheet", href: appCss },
+      {
+        rel: "stylesheet",
+        href: appCss,
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -66,14 +69,5 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-      <SiteFooter />
-      <Toaster position="top-center" richColors />
-    </div>
-  );
+  return <Outlet />;
 }
