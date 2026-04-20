@@ -9,38 +9,128 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RelationshipsRouteImport } from './routes/relationships'
+import { Route as MapRouteImport } from './routes/map'
+import { Route as ContributeRouteImport } from './routes/contribute'
+import { Route as CatsRouteImport } from './routes/cats'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CatsCatIdRouteImport } from './routes/cats.$catId'
 
+const RelationshipsRoute = RelationshipsRouteImport.update({
+  id: '/relationships',
+  path: '/relationships',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapRoute = MapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContributeRoute = ContributeRouteImport.update({
+  id: '/contribute',
+  path: '/contribute',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatsRoute = CatsRouteImport.update({
+  id: '/cats',
+  path: '/cats',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CatsCatIdRoute = CatsCatIdRouteImport.update({
+  id: '/$catId',
+  path: '/$catId',
+  getParentRoute: () => CatsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cats': typeof CatsRouteWithChildren
+  '/contribute': typeof ContributeRoute
+  '/map': typeof MapRoute
+  '/relationships': typeof RelationshipsRoute
+  '/cats/$catId': typeof CatsCatIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cats': typeof CatsRouteWithChildren
+  '/contribute': typeof ContributeRoute
+  '/map': typeof MapRoute
+  '/relationships': typeof RelationshipsRoute
+  '/cats/$catId': typeof CatsCatIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cats': typeof CatsRouteWithChildren
+  '/contribute': typeof ContributeRoute
+  '/map': typeof MapRoute
+  '/relationships': typeof RelationshipsRoute
+  '/cats/$catId': typeof CatsCatIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/cats'
+    | '/contribute'
+    | '/map'
+    | '/relationships'
+    | '/cats/$catId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/cats' | '/contribute' | '/map' | '/relationships' | '/cats/$catId'
+  id:
+    | '__root__'
+    | '/'
+    | '/cats'
+    | '/contribute'
+    | '/map'
+    | '/relationships'
+    | '/cats/$catId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CatsRoute: typeof CatsRouteWithChildren
+  ContributeRoute: typeof ContributeRoute
+  MapRoute: typeof MapRoute
+  RelationshipsRoute: typeof RelationshipsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/relationships': {
+      id: '/relationships'
+      path: '/relationships'
+      fullPath: '/relationships'
+      preLoaderRoute: typeof RelationshipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/map': {
+      id: '/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contribute': {
+      id: '/contribute'
+      path: '/contribute'
+      fullPath: '/contribute'
+      preLoaderRoute: typeof ContributeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cats': {
+      id: '/cats'
+      path: '/cats'
+      fullPath: '/cats'
+      preLoaderRoute: typeof CatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,21 +138,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cats/$catId': {
+      id: '/cats/$catId'
+      path: '/$catId'
+      fullPath: '/cats/$catId'
+      preLoaderRoute: typeof CatsCatIdRouteImport
+      parentRoute: typeof CatsRoute
+    }
   }
 }
 
+interface CatsRouteChildren {
+  CatsCatIdRoute: typeof CatsCatIdRoute
+}
+
+const CatsRouteChildren: CatsRouteChildren = {
+  CatsCatIdRoute: CatsCatIdRoute,
+}
+
+const CatsRouteWithChildren = CatsRoute._addFileChildren(CatsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CatsRoute: CatsRouteWithChildren,
+  ContributeRoute: ContributeRoute,
+  MapRoute: MapRoute,
+  RelationshipsRoute: RelationshipsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
