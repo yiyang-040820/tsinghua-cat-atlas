@@ -14,7 +14,172 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cat_photos: {
+        Row: {
+          caption: string | null
+          cat_id: string
+          created_at: string
+          id: string
+          photo_url: string
+          photographer: string | null
+        }
+        Insert: {
+          caption?: string | null
+          cat_id: string
+          created_at?: string
+          id?: string
+          photo_url: string
+          photographer?: string | null
+        }
+        Update: {
+          caption?: string | null
+          cat_id?: string
+          created_at?: string
+          id?: string
+          photo_url?: string
+          photographer?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cat_photos_cat_id_fkey"
+            columns: ["cat_id"]
+            isOneToOne: false
+            referencedRelation: "cats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cat_relationships: {
+        Row: {
+          cat_a_id: string
+          cat_b_id: string
+          created_at: string
+          description: string | null
+          id: string
+          relation_type: Database["public"]["Enums"]["cat_relation_type"]
+        }
+        Insert: {
+          cat_a_id: string
+          cat_b_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          relation_type: Database["public"]["Enums"]["cat_relation_type"]
+        }
+        Update: {
+          cat_a_id?: string
+          cat_b_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          relation_type?: Database["public"]["Enums"]["cat_relation_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cat_relationships_cat_a_id_fkey"
+            columns: ["cat_a_id"]
+            isOneToOne: false
+            referencedRelation: "cats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cat_relationships_cat_b_id_fkey"
+            columns: ["cat_b_id"]
+            isOneToOne: false
+            referencedRelation: "cats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cats: {
+        Row: {
+          bio: string | null
+          color: string | null
+          cover_photo_url: string | null
+          created_at: string
+          first_seen_date: string | null
+          gender: string | null
+          id: string
+          name: string
+          nicknames: string[] | null
+          personality: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          color?: string | null
+          cover_photo_url?: string | null
+          created_at?: string
+          first_seen_date?: string | null
+          gender?: string | null
+          id?: string
+          name: string
+          nicknames?: string[] | null
+          personality?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          color?: string | null
+          cover_photo_url?: string | null
+          created_at?: string
+          first_seen_date?: string | null
+          gender?: string | null
+          id?: string
+          name?: string
+          nicknames?: string[] | null
+          personality?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      sightings: {
+        Row: {
+          cat_id: string
+          created_at: string
+          id: string
+          latitude: number
+          location_name: string
+          longitude: number
+          notes: string | null
+          reporter: string | null
+          seen_at: string
+        }
+        Insert: {
+          cat_id: string
+          created_at?: string
+          id?: string
+          latitude: number
+          location_name: string
+          longitude: number
+          notes?: string | null
+          reporter?: string | null
+          seen_at?: string
+        }
+        Update: {
+          cat_id?: string
+          created_at?: string
+          id?: string
+          latitude?: number
+          location_name?: string
+          longitude?: number
+          notes?: string | null
+          reporter?: string | null
+          seen_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sightings_cat_id_fkey"
+            columns: ["cat_id"]
+            isOneToOne: false
+            referencedRelation: "cats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +188,14 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      cat_relation_type:
+        | "parent"
+        | "child"
+        | "sibling"
+        | "partner"
+        | "friend"
+        | "neighbor"
+        | "rival"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +322,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      cat_relation_type: [
+        "parent",
+        "child",
+        "sibling",
+        "partner",
+        "friend",
+        "neighbor",
+        "rival",
+      ],
+    },
   },
 } as const
